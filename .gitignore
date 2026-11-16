@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+.env
+.env.*
+.dev.vars
+.wrangler/
+# large originals and raw design files stay out of git; see design/README.md
+design/originals/
+*.psd
+*.ai
+*.fig
+*.mov
+*.mp4
