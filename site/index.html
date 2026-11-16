@@ -391,6 +391,37 @@ details.q .a{padding:0 60px 26px 0;font-size:16px;max-width:60ch;animation:fadeU
   .shoot{right:16px;bottom:16px;padding:10px 14px 10px 11px;font-size:11px}
 }
 @media (max-width:560px){.print .cap{font-size:9px}}
+/* TEMPORARY palette preview: only active with ?palette=a|b|c in the URL. Remove once a palette is chosen. */
+html[data-palette=b]{--sage:#A9BBA3;--sage-l:#E5EBE0;--gold:#C9A85C}
+html[data-palette=b] .hero-bloom{color:var(--sage);opacity:.4}
+html[data-palette=b] .band{background:var(--sage)}
+html[data-palette=b] .pkg{background:var(--sage-l)}
+html[data-palette=b] .pkg.pop .label,html[data-palette=b] .dark .label,html[data-palette=b] .quote cite,html[data-palette=b] .est .label{color:var(--gold)}
+html[data-palette=b] .stamp{background:var(--gold);color:var(--forest)}
+html[data-palette=b] .addons{background:var(--sage-l)}
+html[data-palette=b] #events{background:#F4E6E4!important}
+html[data-palette=b] .step .n{background:var(--sage)}
+html[data-palette=b] .cover{background:var(--sage-l)}
+html[data-palette=b] .ticker svg{color:var(--gold)}
+html[data-palette=b] .hero .meta .bloom{color:var(--gold)!important}
+html[data-palette=b] .slot{background:#56684F}
+html[data-palette=c]{--blush:#E9C3BE;--rose-l:#F7E8E5;--berry:#6B3240;--clay:#B5615A}
+html[data-palette=c] .hero{background:var(--rose-l)}
+html[data-palette=c] .hero-bloom{color:#E9C3BE;opacity:.7;--bloom-eye:var(--rose-l)}
+html[data-palette=c] .pkg{background:var(--rose-l)}
+html[data-palette=c] .pkg.pop{background:var(--berry)}
+html[data-palette=c] .stamp{background:var(--clay);color:var(--ivory)}
+html[data-palette=c] .dark,html[data-palette=c] .ticker{background:var(--berry);border-color:var(--berry)}
+html[data-palette=c] .dark .btn{color:var(--berry)}
+html[data-palette=c] .addons{background:var(--rose-l)}
+html[data-palette=c] .label{color:var(--clay)}
+html[data-palette=c] .dark .label,html[data-palette=c] .pkg.pop .label{color:var(--blush)}
+html[data-palette=c] .ticker svg{--bloom-eye:var(--berry)}
+.palsw{position:fixed;left:16px;bottom:16px;z-index:60;display:flex;gap:4px;align-items:center;padding:6px;border-radius:999px;background:#fff;box-shadow:0 10px 30px -8px rgba(0,0,0,.35);font:500 12px/1 var(--sans)}
+.palsw b{padding:0 6px 0 10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;font-size:10px;color:#666}
+.palsw button{border:0;cursor:pointer;border-radius:999px;padding:9px 12px;background:transparent;color:#333;font:inherit;white-space:nowrap}
+.palsw button[aria-pressed=true]{background:#33413A;color:#fff}
+@media (max-width:560px){.palsw b{display:none}.palsw button{padding:9px 10px;font-size:11px}}
 </style>
 </head>
 <body>
@@ -931,6 +962,16 @@ details.q .a{padding:0 60px 26px 0;font-size:16px;max-width:60ch;animation:fadeU
           .then(done,done);
       })();
     });
+  })();
+  /* TEMPORARY palette preview switcher (see CSS note) */
+  (function(){
+    var q=new URLSearchParams(location.search).get('palette');if(!q)return;
+    var root=document.documentElement,names={a:'A Current',b:'B Sage & gold',c:'C Bold blush'};
+    var bar=document.createElement('div');bar.className='palsw';bar.innerHTML='<b>Palette</b>';
+    function set(k){if(!names[k])k='a';root.dataset.palette=k;$$('button',bar).forEach(function(b){b.setAttribute('aria-pressed',b.dataset.k===k)});
+      var u=new URL(location.href);u.searchParams.set('palette',k);history.replaceState(null,'',u)}
+    Object.keys(names).forEach(function(k){var b=document.createElement('button');b.type='button';b.dataset.k=k;b.textContent=names[k];b.onclick=function(){set(k)};bar.appendChild(b)});
+    document.body.appendChild(bar);set(q.toLowerCase());
   })();
 })();
 </script>
