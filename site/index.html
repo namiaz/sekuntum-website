@@ -391,6 +391,43 @@ details.q .a{padding:0 60px 26px 0;font-size:16px;max-width:60ch;animation:fadeU
   .shoot{right:16px;bottom:16px;padding:10px 14px 10px 11px;font-size:11px}
 }
 @media (max-width:560px){.print .cap{font-size:9px}}
+/* invitation: an envelope opens when scrolled into view, a strip and a ticket slide out */
+.invite .wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,88px);align-items:center}
+.invite .lead{color:rgba(250,246,240,.85)}
+.env-stage{position:relative;width:min(400px,84vw);aspect-ratio:1/1.3;margin:0 auto;perspective:1400px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.env{position:absolute;left:0;right:0;bottom:4%;height:46%}
+.env-cards{position:absolute;inset:0;z-index:2;clip-path:inset(0 -80% 0 -80%);transition:clip-path 0s 1.1s}
+.env-stage.open .env-cards{clip-path:inset(-400% -80% 0 -80%);transition-delay:0s}
+.env-back{position:absolute;inset:0;background:#D7B8B5;border-radius:6px}
+.env-front{position:absolute;inset:0;z-index:3;border-radius:6px;background:linear-gradient(160deg,#EBD6D4,var(--blush) 55%,#DEC2C0);
+  clip-path:polygon(0 0,50% 54%,100% 0,100% 100%,0 100%)}
+.env-flap{position:absolute;left:0;right:0;top:0;height:62%;z-index:4;transform-origin:50% 0;transform-style:preserve-3d;
+  transition:transform .8s var(--ease),z-index 0s .4s}
+.env-flap::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#E2C7C5,#D3B2AF);clip-path:polygon(0 0,100% 0,50% 100%)}
+.env-seal{position:absolute;left:50%;top:100%;width:58px;height:58px;margin:-34px 0 0 -29px;border-radius:50%;display:grid;place-items:center;
+  background:var(--forest);color:var(--ivory);--bloom-eye:var(--forest);box-shadow:0 4px 10px rgba(0,0,0,.25);transition:opacity .3s}
+.env-seal svg{width:28px;height:28px}
+.inv{position:absolute;z-index:2;bottom:8%;transition:transform 1s var(--ease);box-shadow:0 14px 30px -10px rgba(0,0,0,.45)}
+.inv-strip{left:13%;width:31%;background:#fff;padding:6px 6px 0;display:grid;gap:6px;border-radius:2px;transform:translateY(0)}
+.inv-strip img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.inv-strip span{display:block;padding:6px 0 8px;text-align:center;font:600 10px/1 var(--serif);letter-spacing:.1em;color:var(--forest);white-space:nowrap}
+.inv-ticket{left:36%;width:56%;aspect-ratio:1.7/1;color:#5B4630;background:#EADCC0;display:grid;align-content:center;justify-items:center;text-align:center;gap:6px;padding:12px 18px;
+  border-radius:4px;transform:translateY(-6%);
+  -webkit-mask:radial-gradient(circle 10px at 0 50%,#0000 97%,#000) left/51% 100% no-repeat,radial-gradient(circle 10px at 100% 50%,#0000 97%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 10px at 0 50%,#0000 97%,#000) left/51% 100% no-repeat,radial-gradient(circle 10px at 100% 50%,#0000 97%,#000) right/51% 100% no-repeat}
+.inv-ticket::before{content:"";position:absolute;inset:7px 16px;border:1px dashed rgba(91,70,48,.45);border-radius:2px;pointer-events:none}
+.inv-ticket small{font:500 9px/1 var(--sans);letter-spacing:.3em;text-transform:uppercase}
+.inv-ticket b{font:600 clamp(24px,3vw,30px)/1 var(--serif)}
+.inv-ticket a{position:relative;font:500 9px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:inherit;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:3px}
+.env-stage.open .env-flap{transform:rotateX(180deg);z-index:0}
+.env-stage.open .env-seal{opacity:0}
+.env-stage.open .inv-strip{transform:translate(-14%,-46%) rotate(-7deg);transition-delay:.45s}
+.env-stage.open .inv-ticket{transform:translate(8%,-125%) rotate(5deg);transition-delay:.6s}
+.env-hint{display:block;margin:22px auto 0;background:none;border:0;cursor:pointer;color:var(--blush);font:500 11px/1 var(--sans);letter-spacing:.3em;text-transform:uppercase;padding:8px}
+.env-hint:focus-visible{outline:2px solid var(--ivory);outline-offset:3px}
+@media (max-width:820px){.invite .wrap{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.env-flap,.inv{transition:none!important}}
+
 /* TEMPORARY palette preview: only active with ?palette=a|b|c in the URL. Remove once a palette is chosen. */
 html[data-palette=b]{--sage:#A9BBA3;--sage-l:#E5EBE0;--gold:#C9A85C}
 html[data-palette=b] .hero-bloom{color:var(--sage);opacity:.4}
@@ -660,6 +697,41 @@ html[data-palette=c] .ticker svg{--bloom-eye:var(--berry)}
       <div><b>Setup</b><span>About 1 hour before you start</span></div>
       <div><b>Space</b><span>10 × 10 ft and a power point</span></div>
       <div><b>Transport</b><span>RM35 flat in Penang, quoted elsewhere</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="dark invite" id="invite">
+  <div class="wrap">
+    <div>
+      <div class="label">Save the date</div>
+      <h2 class="serif" style="margin-top:18px">Your date, sealed with a strip.</h2>
+      <p class="lead">Every booking starts like an invitation. Tell us your date and venue, pay RM100, and the day is yours. We design your strip from there.</p>
+      <div class="cta" style="margin-top:32px"><a class="btn" href="#request">Check your date <span class="ar">→</span></a></div>
+    </div>
+    <div>
+      <div class="env-stage" id="envStage">
+        <div class="env">
+          <div class="env-back"></div>
+          <div class="env-cards">
+          <div class="inv inv-strip" aria-hidden="true">
+            <img src="assets/photos/guests-posing.jpg" alt="" loading="lazy" style="object-position:50% 22%">
+            <img src="assets/photos/family.jpg" alt="" loading="lazy" style="object-position:50% 30%">
+            <img src="assets/photos/gold-backdrop.jpg" alt="" loading="lazy" style="object-position:50% 25%">
+            <span>sekuntum photobooth</span>
+          </div>
+          <div class="inv inv-ticket">
+            <small>Save the date</small>
+            <b>Your day</b>
+            <small>RM100 holds it</small>
+            <a href="#request" tabindex="-1">Check your date →</a>
+          </div>
+          </div>
+          <div class="env-front"></div>
+          <div class="env-flap"><span class="env-seal"><svg aria-hidden="true"><use href="#b"/></svg></span></div>
+        </div>
+      </div>
+      <button class="env-hint" id="envBtn" type="button" aria-controls="envStage" aria-expanded="false">Tap to open</button>
     </div>
   </div>
 </section>
@@ -962,6 +1034,18 @@ html[data-palette=c] .ticker svg{--bloom-eye:var(--berry)}
           .then(done,done);
       })();
     });
+  })();
+  /* invitation envelope: opens once when scrolled into view; tap to close or open again */
+  (function(){
+    var st=$('#envStage'),btn=$('#envBtn');if(!st)return;
+    var link=$('.inv-ticket a',st);
+    function set(o){st.classList.toggle('open',o);btn.setAttribute('aria-expanded',o);btn.textContent=o?'Close the envelope':'Tap to open';link.tabIndex=o?0:-1}
+    function toggle(){set(!st.classList.contains('open'))}
+    btn.addEventListener('click',toggle);
+    st.addEventListener('click',function(e){if(!e.target.closest('a'))toggle()});
+    if(reduce||!('IntersectionObserver' in window)){set(true);return}
+    var io=new IntersectionObserver(function(es){if(es[0].isIntersecting){io.disconnect();setTimeout(function(){set(true)},350)}},{threshold:.55});
+    io.observe(st);
   })();
   /* TEMPORARY palette preview switcher (see CSS note) */
   (function(){
