@@ -169,19 +169,25 @@ header{position:sticky;top:0;z-index:30;background:rgba(250,246,240,.94);backdro
 .sch .vid{aspect-ratio:9/14;max-height:78svh;border-radius:22px}
 
 /* strip print (moment 2) */
-.print{padding:0;background:var(--mist)}
-.print-stick{position:sticky;top:0;height:100svh;display:flex;align-items:center}
+.print{background:var(--mist)}
+.print-stick{display:block}
 .print-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,6vw,100px);align-items:center;width:100%}
 .print .list{list-style:none;margin-top:30px}
 .print .list li{display:flex;gap:16px;padding:15px 0;border-top:1px solid rgba(51,65,58,.22);align-items:flex-start;font-size:17px}
 .print .list li:last-child{border-bottom:1px solid rgba(51,65,58,.22)}
 .print .list li .bloom{margin-top:6px}
 .print .list b{font-weight:600}
-.slot-wrap{display:flex;justify-content:center}
-.slot{width:min(300px,64vw)}
-.slot-bar{height:16px;border-radius:10px;background:var(--forest);position:relative;z-index:2;box-shadow:0 10px 16px -8px rgba(38,48,43,.5)}
-.slot-win{overflow:hidden;height:min(66svh,560px);margin:0 10px}
-.slot-win img{width:100%;height:100%;object-fit:contain;object-position:top;background:#fff;box-shadow:0 20px 36px -20px rgba(38,48,43,.55);will-change:transform}
+.printer{width:min(300px,78vw);margin:0 auto}
+.slot-bar{height:18px;border-radius:10px;background:var(--forest);position:relative;z-index:2;box-shadow:0 10px 16px -8px rgba(38,48,43,.5)}
+.slot-win{position:relative;overflow:hidden;margin:-2px auto 0;height:min(62svh,540px);aspect-ratio:1/3.05}
+.pstrip{position:absolute;inset:0;transform:translate3d(0,-101%,0);will-change:transform}
+.pstrip img{width:100%;height:100%;object-fit:cover;object-position:top;background:#fff;box-shadow:0 20px 32px -18px rgba(38,48,43,.55)}
+.pstrip.current{transform:none;transition:transform 1.3s var(--ease)}
+.pstrip.out{transform:translate3d(0,104%,0);transition:transform .8s cubic-bezier(.55,0,.8,.4)}
+.pstrip.reset{transform:translate3d(0,-101%,0);transition:none}
+.js .printer:not(.started) .pstrip.current{transform:translate3d(0,-101%,0)}
+.print-ctl{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:26px;flex-wrap:wrap}
+.print-ctl .count{font:600 12px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase}
 
 /* designs */
 .designs-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap}
@@ -326,6 +332,7 @@ footer a{margin-left:24px}
   .fade-up,.hero h1 .ln>span{opacity:1;transform:none}
   .hero .vid{clip-path:none}
   html{scroll-behavior:auto}
+  .pstrip.current,.pstrip.out,.pstrip.reset{transition:none!important}
 }
 
 /* responsive */
@@ -400,10 +407,6 @@ footer a{margin-left:24px}
 .nopin .reel-view::-webkit-scrollbar{display:none}
 .nopin .reel-item{height:min(52svh,420px)}
 .nopin .reel-bar{display:none}
-.nopin .print{padding:clamp(72px,9vw,120px) 0}
-.nopin .print-stick{position:static;height:auto;display:block}
-.nopin .print-grid{gap:44px}
-.nopin .slot-win img{transform:none!important}
 </style>
 </head>
 <body>
@@ -603,10 +606,17 @@ footer a{margin-left:24px}
           <li><svg class="bloom"><use href="#b"/></svg><span><b>Online softcopy gallery</b>, yours to keep</span></li>
         </ul>
       </div>
-      <div class="slot-wrap">
-        <div class="slot">
-          <div class="slot-bar"></div>
-          <div class="slot-win"><img width="359" height="1080" id="printImg" src="assets/web/strip-annual.jpg" alt="A printed annual dinner photo strip with a custom cream design" loading="lazy"></div>
+      <div class="printer" id="printer">
+        <div class="slot-bar"></div>
+        <div class="slot-win" id="slotWin">
+          <div class="pstrip current"><img src="assets/web/strip-annual.jpg" alt="A printed annual dinner strip with a cream and gold design" width="466" height="1400"></div>
+          <div class="pstrip"><img src="assets/web/strip-red.jpg" alt="A printed red floral wedding strip" width="466" height="1400" loading="lazy"></div>
+          <div class="pstrip"><img src="assets/web/strip-earthy.jpg" alt="A printed earthy traditional wedding strip" width="466" height="1400" loading="lazy"></div>
+          <div class="pstrip"><img src="assets/web/strip-night.jpg" alt="A printed night sky student event strip" width="466" height="1400" loading="lazy"></div>
+        </div>
+        <div class="print-ctl">
+          <button class="btn" type="button" id="printBtn">Print another strip <span class="ar">→</span></button>
+          <span class="count" id="printCount" aria-live="polite">1 of 4</span>
         </div>
       </div>
     </div>
@@ -868,7 +878,7 @@ footer a{margin-left:24px}
   var clamp=function(v,a,b){return Math.max(a,Math.min(b,v))};
 
   /* ---------- pinned moments: reel + print ---------- */
-  var reel=$('#reel'),track=$('#reelTrack'),bar=$('#reelBar'),print=$('#strip'),pimg=$('#printImg');
+  var reel=$('#reel'),track=$('#reelTrack'),bar=$('#reelBar'),printer=$('#printer');
   var pin=false,dist=0,tick=false;
   function setPin(){
     pin=!reduce&&window.matchMedia('(min-width:901px)').matches;
@@ -876,10 +886,9 @@ footer a{margin-left:24px}
     if(pin){
       dist=Math.max(0,track.scrollWidth-document.documentElement.clientWidth);
       reel.style.height=(dist+innerHeight)+'px';
-      print.style.height=(innerHeight*2.1)+'px';
     }else{
-      reel.style.height='';print.style.height='';
-      track.style.transform='';pimg.style.transform='';
+      reel.style.height='';
+      track.style.transform='';
     }
     frame();
   }
@@ -889,14 +898,31 @@ footer a{margin-left:24px}
     var r=reel.getBoundingClientRect(),p=clamp(-r.top/Math.max(1,reel.offsetHeight-innerHeight),0,1);
     track.style.transform='translate3d('+(-p*dist)+'px,0,0)';
     bar.style.transform='scaleX('+p+')';
-    var s=print.getBoundingClientRect(),q=clamp((-s.top/Math.max(1,print.offsetHeight-innerHeight)-.08)/.62,0,1);
-    q=1-Math.pow(1-q,2);
-    pimg.style.transform='translate3d(0,'+(-(1-q)*100)+'%,0)';
   }
   addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(frame)}},{passive:true});
   addEventListener('resize',setPin);
   addEventListener('load',setPin);
   setPin();
+
+  /* ---------- strip printer: first strip prints on view, a click prints the next ---------- */
+  var strips=$$('#printer .pstrip'),cur=0,busy=false,btn=$('#printBtn'),cnt=$('#printCount');
+  if('IntersectionObserver' in window&&!reduce){
+    new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting){printer.classList.add('started');o.disconnect()}})},{threshold:.4}).observe(printer);
+  }else{printer.classList.add('started')}
+  btn.addEventListener('click',function(){
+    if(busy)return;
+    printer.classList.add('started');
+    var from=strips[cur],to=strips[(cur+1)%strips.length];
+    cur=(cur+1)%strips.length;
+    cnt.textContent=(cur+1)+' of '+strips.length;
+    if(reduce){from.classList.remove('current');to.classList.add('current');return}
+    busy=true;
+    from.classList.remove('current');from.classList.add('out');
+    to.classList.remove('out');to.classList.add('reset');
+    void to.offsetWidth;
+    to.classList.remove('reset');to.classList.add('current');
+    setTimeout(function(){from.classList.remove('out');busy=false},1300);
+  });
 
   /* ---------- video: play only in view, with a pause button ---------- */
   var userPaused={};
