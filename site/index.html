@@ -335,6 +335,24 @@ footer a{margin-left:24px}
   .pstrip.current,.pstrip.out,.pstrip.reset{transition:none!important}
 }
 
+/* 50 stories */
+.fifty{background:var(--mist)}
+.fifty-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px);align-items:start}
+.fifty h2.serif{max-width:14ch}
+.fifty .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:32px}
+.fifty .keep{margin-top:26px;font-size:15px;max-width:44ch}
+.fifty .keep b{font-weight:600}
+.f-types{list-style:none;display:grid;gap:14px}
+.f-types li{background:var(--ivory);border-radius:var(--r);padding:22px 24px}
+.f-types .label{font-size:11px;letter-spacing:.24em;color:var(--forest)}
+.f-types q{display:block;font-family:var(--serif);font-weight:400;font-size:clamp(19px,1.8vw,23px);line-height:1.25;margin-top:12px;quotes:none}
+.fdots{display:grid;grid-template-columns:repeat(25,1fr);gap:6px;max-width:520px;margin-top:40px}
+.fdots i{aspect-ratio:1;border-radius:50%;border:1.5px solid var(--forest);opacity:.35}
+.fdots i.on{background:var(--forest);opacity:1}
+.fcount{margin-top:14px;font:600 12px/1.6 var(--sans);letter-spacing:.18em;text-transform:uppercase}
+@media (max-width:900px){.fifty-grid{grid-template-columns:1fr}.fifty h2.serif{max-width:none}}
+@media (max-width:640px){.fifty .cta .btn{width:100%;justify-content:center}.fdots{grid-template-columns:repeat(10,1fr);gap:8px}}
+
 /* responsive */
 @media (max-width:1100px){
   .pkgs{grid-template-columns:repeat(2,1fr)}
@@ -419,6 +437,7 @@ footer a{margin-left:24px}
     <nav aria-label="Main">
       <a class="ul" href="#stories">Stories</a>
       <a class="ul" href="#designs">Designs</a>
+      <a class="ul" href="#fifty">50 Stories</a>
       <a class="ul" href="#packages">Packages</a>
       <a class="ul" href="#faq">FAQ</a>
       <a class="btn" href="#request">Check your date <span class="ar">→</span></a>
@@ -658,6 +677,33 @@ footer a{margin-left:24px}
   </div>
 </section>
 
+<!-- 50 STORIES -->
+<section class="fifty" id="fifty">
+  <div class="wrap fifty-grid">
+    <div>
+      <div class="label">50 Stories with Sekuntum · 2027</div>
+      <h2 class="serif">Every story deserves to be <em>remembered.</em></h2>
+      <p class="lead">Every celebration has a story. This year we're keeping 50 of them from the weddings, company dinners and school days we're part of. Booked with us? Yours could be one.</p>
+      <p class="keep"><b>What you get.</b> Every story we share comes with a keepsake: a short digital copy of your story, yours to keep. Nothing is posted until you've read it and said yes.</p>
+      <div class="cta">
+        <a class="btn" href="#request">Check your date <span class="ar">→</span></a>
+        <a class="btn ghost" href="#faq">How it works</a>
+      </div>
+      <div class="fdots" id="fDots" data-shared="0" aria-hidden="true"></div>
+      <p class="fcount"><span id="fN">0</span> of 50 stories shared · starting 1 January 2027</p>
+    </div>
+    <ul class="f-types">
+      <li><span class="label">Stories of love</span><q>What is one little thing about your partner that you hope never changes?</q></li>
+      <li><span class="label">Stories of togetherness</span><q>What's one moment with your colleagues that you'll always remember?</q></li>
+      <li><span class="label">Stories of growing up</span><q>What is one school memory you wish you could experience again?</q></li>
+    </ul>
+  </div>
+</section>
+<script>
+(function(){var d=document.getElementById('fDots'),n=Math.min(50,+d.dataset.shared||0),h='';
+for(var i=0;i<50;i++)h+='<i'+(i<n?' class="on"':'')+'></i>';d.innerHTML=h;document.getElementById('fN').textContent=n})();
+</script>
+
 <!-- PACKAGES -->
 <section id="packages">
   <div class="wrap">
@@ -830,6 +876,7 @@ footer a{margin-left:24px}
       <a class="btn ghost" href="https://wa.me/60195981909?text=Hi%20Sekuntum%2C%20I%20have%20a%20question." target="_blank" rel="noopener">Ask on WhatsApp</a>
     </div>
     <div>
+      <details class="q"><summary>What is 50 Stories with Sekuntum?<span class="plus" aria-hidden="true"></span></summary><div class="a">In 2027 we are keeping 50 stories from the events we are part of. After you book, we message you on WhatsApp with a short form, about 5 minutes. We write your story from your own answers and send it to you first. Nothing is shared until you say yes, and you get a digital keepsake of your story either way.</div></details>
       <details class="q"><summary>How do I secure my date?<span class="plus" aria-hidden="true"></span></summary><div class="a">Send us your date and venue and we tell you if it is free. Pay an RM100 deposit and the date is yours. The balance is settled on the event day.</div></details>
       <details class="q"><summary>How long does setup take, and what do you need?<span class="plus" aria-hidden="true"></span></summary><div class="a">We set up about an hour before you start. We need a space of 10 × 10 ft and a power point nearby.</div></details>
       <details class="q"><summary>How do guests get their photos?<span class="plus" aria-hidden="true"></span></summary><div class="a">Strips are printed on the spot, in seconds, and the number of prints is unlimited for the whole event. You also get an online softcopy gallery afterwards.</div></details>
